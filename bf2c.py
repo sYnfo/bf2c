@@ -10,12 +10,20 @@ bf2c = {">": "INCD()",  #increment data pointer \
         "[": "JUMPF()", #jump forward to ] if zero \
         "]": "JUMPB()"} #jump backward to [ if nonzero
 
-#We should check if [] are balanced
 with open(sys.argv[1]) as src, open("bf.c", "w") as outp:
+    balanced_parens = 0
     for n, line in enumerate(src):
-        outp.write("#line " + str(n) + '" %s"\n'%sys.argv[1])
+        outp.write("#line " + str(n) + '"%s"\n'%sys.argv[1])
         for l in line:
+            if l == "[":
+                balanced_parens += 1
+            elif l == "]":
+                balanced_parens -= 1
+            if balanced_parens < 0:
+                sys.exit("Unbalanced parenthesis.")
             if l in bf2c:
                 outp.write(bf2c[l] + "\n")
+if balanced_parens:
+    sys.exit("Unbalanced parenthesis.")
 
 subprocess.call(["gcc", "-g", "bf_runtime.c", "-o", "bf"])
