@@ -10,20 +10,27 @@ bf2c = {">": "INCD()",  #increment data pointer \
         "[": "JUMPF()", #jump forward to ] if zero \
         "]": "JUMPB()"} #jump backward to [ if nonzero
 
+def balanced_parens(s):
+    balance = 0
+    for l in s:
+        if l == "[":
+            balance += 1
+        elif l == "]":
+            balance -= 1
+            if balance < 0:
+                return False
+    if balance:
+        return False
+    return True
+
 with open(sys.argv[1]) as src, open("bf.c", "w") as outp:
-    balanced_parens = 0
+    if not balanced_parens(src):
+        sys.exit("Unbalanced parentheses.")
+    src.seek(0)
     for n, line in enumerate(src):
         outp.write("#line " + str(n) + '"%s"\n'%sys.argv[1])
         for l in line:
-            if l == "[":
-                balanced_parens += 1
-            elif l == "]":
-                balanced_parens -= 1
-            if balanced_parens < 0:
-                sys.exit("Unbalanced parenthesis.")
             if l in bf2c:
                 outp.write(bf2c[l] + "\n")
-if balanced_parens:
-    sys.exit("Unbalanced parenthesis.")
 
 subprocess.call(["gcc", "-g", "bf_runtime.c", "-o", "bf"])
