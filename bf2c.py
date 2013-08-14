@@ -11,16 +11,18 @@ bf2c = {">": "INCD()",  #increment data pointer \
         "]": "JUMPB()"} #jump backward to [ if nonzero
 
 def balanced_parens(s):
-    balance = 0
+    parens = []
     s = s.read()
-    for l in s:
+    for i, l in enumerate(s):
         if l == "[":
-            balance += 1
+            parens.append(i)
         elif l == "]":
-            balance -= 1
-            if balance < 0:
+            try:
+                parens.pop()
+            except IndexError:
                 return False
-    if balance:
+    if parens:
+        print("Unbalanced parenthesis at {}".format(parens.pop()))
         return False
     return True
 
