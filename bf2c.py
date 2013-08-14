@@ -36,4 +36,4 @@ with open(sys.argv[1]) as src, open("bf.c", "w") as outp:
             if l in bf2c:
                 outp.write(bf2c[l] + "\n")
 
-subprocess.call(["gcc", "-g", "bf_runtime.c", "-o", "bf"])
+subprocess.call(["gcc", "-g", "-O2" , "bf_runtime.c", "-o", "bf"])
