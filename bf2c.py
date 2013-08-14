@@ -12,6 +12,7 @@ bf2c = {">": "INCD()",  #increment data pointer \
 
 def balanced_parens(s):
     balance = 0
+    s = s.read()
     for l in s:
         if l == "[":
             balance += 1
